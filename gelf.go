@@ -15,7 +15,10 @@ import (
 var hostname string
 
 func init() {
-	hostname, _ = os.Hostname()
+	hostname = os.Getenv("LOGSPOUT_HOSTNAME")
+	if (hostname == "") {
+		hostname, _ = os.Hostname()	
+	}
 	router.AdapterFactories.Register(NewGelfAdapter, "gelf")
 }
 
@@ -49,12 +52,12 @@ func (a *GelfAdapter) Stream(logstream chan *router.Message) {
 
 		msg := GelfMessage{
 			Version:        "1.1",
-      			Host:           hostname, // Running as a container cannot discover the Docker Hostname
+      		Host:           hostname, // Running as a container cannot discover the Docker Hostname
 			ShortMessage:   m.Data,
 			Timestamp:      m.Time.Format(time.RFC3339Nano),
 			ContainerId:    m.Container.ID,
 			ContainerName:  m.Container.Name,
-			ContainerCmd:   strings.Join(m.Container.Config.Cmd," "),
+			ContainerCmd:   strings.Join([]string(strings.Join(m.Container.Config.Entrypoint, " "), strings.Join(m.Container.Config.Cmd," ")), " "),
 			ImageId:        m.Container.Image,
 			ImageName:      m.Container.Config.Image,
 		}

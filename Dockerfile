@@ -1,0 +1,2 @@
+FROM gliderlabs/logspout
+ENV LOGSPOUT_HOSTNAME logspout
