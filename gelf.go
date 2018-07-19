@@ -57,7 +57,7 @@ func (a *GelfAdapter) Stream(logstream chan *router.Message) {
 			Timestamp:      m.Time.Format(time.RFC3339Nano),
 			ContainerId:    m.Container.ID,
 			ContainerName:  m.Container.Name,
-			ContainerCmd:   strings.Join([]string(strings.Join(m.Container.Config.Entrypoint, " "), strings.Join(m.Container.Config.Cmd," ")), " "),
+			ContainerCmd:   strings.Join([]string{strings.Join(m.Container.Config.Entrypoint, " "), strings.Join(m.Container.Config.Cmd," ")}, " "),
 			ImageId:        m.Container.Image,
 			ImageName:      m.Container.Config.Image,
 		}
