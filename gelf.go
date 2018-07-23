@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 	"strings"
+	"io/ioutil"
 
 	"github.com/gliderlabs/logspout/router"
 )
@@ -17,7 +18,14 @@ var hostname string
 func init() {
 	hostname = os.Getenv("LOGSPOUT_HOSTNAME")
 	if (hostname == "") {
-		hostname, _ = os.Hostname()	
+		if _, err := os.Stat("/opt/dockerhostname"); os.IsNotExist(err) {
+		  hostname, _ = os.Hostname()
+		}
+		b, err := ioutil.ReadFile("/opt/dockerhostname")
+		if err != nil {
+			hostname, _ = os.Hostname()
+		}
+		hostname = string(b)
 	}
 	router.AdapterFactories.Register(NewGelfAdapter, "gelf")
 }
