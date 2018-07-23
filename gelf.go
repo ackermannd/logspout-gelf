@@ -70,7 +70,7 @@ func (a *GelfAdapter) Stream(logstream chan *router.Message) {
 			ContainerCmd:     strings.Join([]string{strings.Join(m.Container.Config.Entrypoint, " "), strings.Join(m.Container.Config.Cmd, " ")}, " "),
 			ImageId:          m.Container.Image,
 			ImageName:        m.Container.Config.Image,
-			ContainerCreated: m.Container.Created.Format(time.RFC3339),
+			ContainerCreated: m.Container.Created.Format(time.RFC3339Nano),
 		}
 
 		if m.Source == "stdout" {
