@@ -64,7 +64,7 @@ func (a *GelfAdapter) Stream(logstream chan *router.Message) {
 			Version:          "1.1",
 			Host:             hostname, // Running as a container cannot discover the Docker Hostname
 			ShortMessage:     m.Data,
-			Timestamp:        m.Time.Format(time.RFC3339Nano),
+			Timestamp:        m.Time.Unix(),
 			ContainerId:      m.Container.ID,
 			ContainerName:    strings.TrimLeft(m.Container.Name, "/"),
 			ContainerCmd:     strings.Join([]string{strings.Join(m.Container.Config.Entrypoint, " "), strings.Join(m.Container.Config.Cmd, " ")}, " "),
@@ -99,7 +99,7 @@ type GelfMessage struct {
 	Host         string `json:"host,omitempty"`
 	ShortMessage string `json:"short_message"`
 	FullMessage  string `json:"message,omitempty"`
-	Timestamp    string `json:"timestamp,omitempty"`
+	Timestamp    int64  `json:"timestamp,omitempty"`
 	Level        int    `json:"level,omitempty"`
 
 	ImageId          string `json:"image_id,omitempty"`
