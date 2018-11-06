@@ -59,6 +59,10 @@ func NewGelfAdapter(route *router.Route) (router.LogAdapter, error) {
 // Stream implements the router.LogAdapter interface.
 func (a *GelfAdapter) Stream(logstream chan *router.Message) {
 	for m := range logstream {
+		
+		if len(m.Data) == 0 {
+			continue	
+		}
 
 		msg := GelfMessage{
 			Version:          "1.1",
